@@ -14,7 +14,7 @@ class ApiAuthController extends Controller
     public $successStatus = 200;
 
     public function login(){
-        if(Auth::attempt(['name' => request('name'), 'password' => request('password')])){
+        if(Auth::attempt(['username' => request('username'), 'password' => request('password')])){
             $user = Auth::user();
             $token =  $user->createToken('MyApp')-> accessToken;
             return response()->json(['result' => 'success', 'user' => $user, 'token' => $token], $this-> successStatus);
@@ -27,7 +27,9 @@ class ApiAuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:users',
+            'username' => 'required|string|unique:users',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'email' => 'required|string|email|max:255|unique:users',
             'birth' => 'required',
             'password' => 'required|string|min:6',
@@ -41,8 +43,6 @@ class ApiAuthController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-
-        $user['avatar_url'] = asset('uploads/avatars/default.png');
 
         if($request->image) {
             $data = $request->image;
@@ -67,11 +67,13 @@ class ApiAuthController extends Controller
             $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
 
             file_put_contents($path, $data);
-            
+
             $user->avatar = $random_name;
             $user->save();
 
             $user['avatar_url'] = asset('uploads/avatars/'.$user->name.'/'.$user->avatar);
+        } else {
+            $user['avatar_url'] = asset('uploads/avatars/default.png');
         }
 
         $token =  $user->createToken('MyApp')-> accessToken;

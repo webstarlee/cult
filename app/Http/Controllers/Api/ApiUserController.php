@@ -99,13 +99,30 @@ class ApiUserController extends Controller
         $user = Auth::user();
         $to_user = $request->user_id;
         $cult = $request->cult_id;
+        $check_exist = FriendRequest::where('from_user_id', $user->id)->where('to_user_id', $to_user)->count();
+        if ($check_exist == 0) {
+            $newRequest = new FriendRequest;
+            $newRequest->from_user_id = $user->id;
+            $newRequest->to_user_id = $to_user;
+            $newRequest->cult_id = $cult;
+            $newRequest->save();
 
-        $newRequest = new FriendRequest;
-        $newRequest->from_user_id = $user->id;
-        $newRequest->to_user_id = $to_user;
-        $newRequest->cult_id = $cult;
-        $newRequest->save();
+            return response()->json(['result' => 'success'], $this-> successStatus);
+        }
 
-        return response()->json(['result' => 'success'], $this-> successStatus);
+        return response()->json(['result' => 'error', 'msg' => 'already sent request'], 401);
+    }
+
+    public function friendRequestDelete(Request $request)
+    {
+        $user = Auth::user();
+        $to_user = $request->user_id;
+        $fri_request = FriendRequest::where('from_user_id', $user->id)->where('to_user_id', $to_user)->first();
+        if ($fri_request) {
+            $fri_request->delete();
+            return response()->json(['result' => 'success'], $this-> successStatus);
+        }
+
+        return response()->json(['result' => 'error', 'msg' => 'can not find friend request'], 401);
     }
 }

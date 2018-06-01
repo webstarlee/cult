@@ -34,4 +34,7 @@ Route::group(['middleware' => 'auth:api'], function(){
         Route::post('/request', 'Api\ApiUserController@friendRequest');
         Route::post('/request/delete', 'Api\ApiUserController@friendRequestDelete');
     });
+    Route::prefix('post')->group(function () {
+        Route::post('/photo/new', 'Api\ApiPostController@postPhoto');
+    });
 });

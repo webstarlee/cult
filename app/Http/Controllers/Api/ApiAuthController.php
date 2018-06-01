@@ -57,11 +57,11 @@ class ApiAuthController extends Controller
             $imageRand = time();
             $random_name = $user->id."_".$imageRand.".png";
 
-            if(!is_dir(public_path('uploads/avatars/'.$user->name))){
-                mkdir(public_path('uploads/avatars/'.$user->name));
+            if(!is_dir(public_path('uploads/avatars/'.$user->username))){
+                mkdir(public_path('uploads/avatars/'.$user->username));
             }
 
-            $dst = public_path('uploads/avatars/'.$user->name.'/');
+            $dst = public_path('uploads/avatars/'.$user->username.'/');
 
             if($user->avatar != 'default.png') {
                 if (File::exists($dst . $user->avatar)) {
@@ -78,7 +78,7 @@ class ApiAuthController extends Controller
             $user->avatar = $random_name;
             $user->save();
 
-            $user['avatar_url'] = asset('uploads/avatars/'.$user->name.'/'.$user->avatar);
+            $user['avatar_url'] = asset('uploads/avatars/'.$user->username.'/'.$user->avatar);
         } else {
             $user['avatar_url'] = asset('uploads/avatars/default.png');
         }

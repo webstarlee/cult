@@ -17,6 +17,13 @@ class ApiAuthController extends Controller
         if(Auth::attempt(['username' => request('username'), 'password' => request('password')])){
             $user = Auth::user();
             $token =  $user->createToken('MyApp')-> accessToken;
+
+            if($user->avatar == "default.png") {
+                $user['avatar_url'] = asset('uploads/avatars/default.png');
+            } else {
+                $user['avatar_url'] = asset('uploads/avatars/'.$user->name.'/'.$user->avatar);
+            }
+
             return response()->json(['result' => 'success', 'user' => $user, 'token' => $token], $this-> successStatus);
         }
         else{
@@ -33,7 +40,7 @@ class ApiAuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'birth' => 'required',
             'password' => 'required|string|min:6',
-            'c_password' => 'required|same:password',
+            'gender' => 'required',
         ]);
 
         if ($validator->fails()) {

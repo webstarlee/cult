@@ -20,8 +20,9 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->date('birth');
+            $table->integer('gender')->default(0);// 0= male, 1=female, 2=other
             $table->string('avatar')->default('default.png');
-            $table->integer('role')->default(0);//0 = personal, 1 = artist
+            $table->integer('role')->default(0);// 0 = personal, 1 = artist
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

@@ -21,7 +21,7 @@ class ApiAuthController extends Controller
             if($user->avatar == "default.png") {
                 $user['avatar_url'] = asset('uploads/avatars/default.png');
             } else {
-                $user['avatar_url'] = asset('uploads/avatars/'.$user->name.'/'.$user->avatar);
+                $user['avatar_url'] = asset('uploads/avatars/'.$user->username.'/'.$user->avatar);
             }
 
             return response()->json(['result' => 'success', 'user' => $user, 'token' => $token], $this-> successStatus);

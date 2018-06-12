@@ -20,7 +20,7 @@ class ApiPostController extends Controller
         $validator = Validator::make($request->all(), [
             'image' => 'required|string',
             'caption' => 'required|string',
-            'cult_id' => 'required',
+            'cult_ids' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -46,11 +46,13 @@ class ApiPostController extends Controller
 
         file_put_contents($path, $data);
 
+        $serialed_cult_ids = serialize($request->cult_ids);
+
         $post = new PostPhoto;
         $post->user_id = $user->id;
         $post->photo_file = $random_name;
         $post->photo_caption = $request->caption;
-        $post->cult_id = $request->cult_id;
+        $post->cult_ids = $serialed_cult_ids;
         $post->save();
 
         $post['image_url'] = asset('uploads/photos/'.$user->username.'/'.$post->photo_file);

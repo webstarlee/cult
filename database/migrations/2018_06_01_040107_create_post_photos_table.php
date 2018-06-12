@@ -18,7 +18,7 @@ class CreatePostPhotosTable extends Migration
             $table->integer('user_id');
             $table->string('photo_file');
             $table->string('photo_caption');
-            $table->integer('cult_id');
+            $table->binary('cult_ids');
             $table->timestamps();
         });
     }

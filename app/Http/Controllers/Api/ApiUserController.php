@@ -63,8 +63,8 @@ class ApiUserController extends Controller
             $friend = User::where('email', $email)->where('id', '!=', Auth::user()->id)->first();
             if($friend) {
                 $friend['avatar_url'] = asset('uploads/avatars/default.png');
-                if ($friend->avatar != "default.png" && File::exists('uploads/avatars/'.$friend->name.'/'.$friend->avatar)) {
-                    $friend['avatar_url'] = asset('uploads/avatars/'.$friend->name.'/'.$friend->avatar);
+                if ($friend->avatar != "default.png" && File::exists('uploads/avatars/'.$friend->username.'/'.$friend->avatar)) {
+                    $friend['avatar_url'] = asset('uploads/avatars/'.$friend->username.'/'.$friend->avatar);
                 }
                 array_push($friends, $friend);
             }
